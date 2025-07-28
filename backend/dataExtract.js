@@ -40,7 +40,7 @@ async function extractInvoiceMarkdown(fileBuffer) {
                 base64Source: base64Source,
             },
             queryParameters: {
-                outputContentFormat: "text", // Specify markdown output
+                outputContentFormat: "markdown", // Specify markdown output
             },
         });
 
