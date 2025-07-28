@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice PDF Extractor</title>
+    <style>
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+    color: #1e293b;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 1000px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 32px 24px;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px rgba(80, 112, 255, 0.10);
+  }
+  h1 {
+    color: #2563eb;
+    text-align: center;
+    margin-bottom: 32px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+  input[type="file"] {
+    display: block;
+    margin-bottom: 18px;
+    padding: 12px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    width: 50%;
+    background: #f1f5f9;
+    font-size: 1rem;
+  }
+  button {
+    background: linear-gradient(90deg, #2563eb 60%, #38bdf8 100%);
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+    transition: background 0.2s;
+    margin-bottom: 16px;
+  }
+  button:hover {
+    background: linear-gradient(90deg, #1d4ed8 60%, #0ea5e9 100%);
+  }
+  #status-messages {
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #e0e7ff 0%, #f1f5f9 100%);
+    min-height: 40px;
+    font-size: 1rem;
+    color: #2563eb;
+    margin-bottom: 18px;
+    border: 1px solid #dbeafe;
+    font-weight: 500;
+    box-shadow: 0 1px 4px rgba(80, 112, 255, 0.05);
+    transition: background 0.3s, color 0.3s, border 0.3s;
+  }
+  #status-messages.progress {
+    background: linear-gradient(90deg, #bbf7d0 0%, #4ade80 100%);
+    color: #166534;
+    border-color: #4ade80;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(16,185,129,0.08);
+  }
+  #status-messages.error {
+    background: linear-gradient(90deg, #fee2e2 0%, #fecaca 100%);
+    color: #b91c1c;
+    border-color: #f87171;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(239,68,68,0.08);
+  }
+  #status-messages.success {
+    background: linear-gradient(90deg, #d1fae5 0%, #6ee7b7 100%);
+    color: #065f46;
+    border-color: #34d399;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(16,185,129,0.08);
+  }
+  .result-item {
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(37,99,235,0.06);
+    background: linear-gradient(90deg, #f1f5f9 0%, #fff 100%);
+    padding: 20px 18px;
+    margin-top: 18px;
+    border: 1.5px solid #dbeafe;
+    transition: box-shadow 0.2s, border 0.2s, background 0.2s;
+  }
+  .result-item.error {
+    border-color: #fecaca;
+    background: linear-gradient(90deg, #fef2f2 0%, #fff 100%);
+  }
+  .result-item.success {
+    border-color: #bbf7d0;
+    background: linear-gradient(90deg, #f0fdf4 0%, #fff 100%);
+  }
+  .result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+  .badge.success { background: #22c55e; }
+  .badge.error { background: #ef4444; }
+  .download-link {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: linear-gradient(90deg, #0e1d14 60%, #0e1d14 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .download-link:hover {
+    background: linear-gradient(90deg, #0f7535 60%, #021f04 100%);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px 0;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 1rem;
+    box-shadow: 0 1px 4px rgba(80, 112, 255, 0.04);
+  }
+  th, td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+  }
+  th {
+    background: #f1f5f9;
+    font-weight: 700;
+    color: #2563eb;
+  }
+  tr:last-child td {
+    border-bottom: none;
+  }
+  .upload-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .upload-row input[type="file"] {
+    margin-bottom: 0;
+    width: 100%;
+    flex: 1 1 auto;
+    background: #f1f5f9;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 1rem;
+  }
+  .upload-row button {
+    margin-bottom: 0;
+    white-space: nowrap;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, #2563eb 60%, #38bdf8 100%);
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+    transition: background 0.2s;
+  }
+  .upload-row button:hover {
+    background: linear-gradient(90deg, #1d4ed8 60%, #0ea5e9 100%);
+  }
+  @media (max-width: 600px) {
+    .container { padding: 12px 4px; }
+    table, th, td { font-size: 0.95rem; }
+    h1 { font-size: 1.5rem; }
+    .upload-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Invoice PDF Extractor</h1>
+
+        <div class="upload-row">
+            <input type="file" id="pdfFileInput" accept=".pdf" multiple>
+            <button id="uploadButton">Upload and Extract</button>
+        </div>
+
+        <div id="status-messages">
+            Ready to upload...
+        </div>
+
+        <div id="results-container">
+            </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', async () => {
+            const fileInput = document.getElementById('pdfFileInput');
+            const files = fileInput.files;
+            const statusDiv = document.getElementById('status-messages');
+            const resultsContainer = document.getElementById('results-container');
+
+            statusDiv.innerHTML = '';
+            resultsContainer.innerHTML = '';
+
+            if (files.length === 0) {
+                statusDiv.innerHTML = 'Please select one or more PDF files.';
+                return;
+            }
+
+            statusDiv.innerHTML = `Processing ${files.length} file(s)...`;
+            statusDiv.classList.add('progress');
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append('invoicePdfs', files[i]);
+            }
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const results = await response.json();
+                statusDiv.innerHTML = 'Processing complete!';
+                statusDiv.classList.remove('progress');
+                results.forEach(result => {
+                    const resultItem = document.createElement('div');
+                    resultItem.classList.add('result-item');
+                    if (!result.success) resultItem.classList.add('error');
+
+                    let content = `
+      <div class="result-header">
+        <h3 style="margin:0;">${result.fileName}</h3>
+        <span class="badge ${result.success ? 'success' : 'error'}">
+          ${result.success ? 'Success' : 'Error'}
+        </span>
+      </div>
+    `;
+
+    if (result.success && result.data) {
+        // Header Table
+        if (result.data.header) {
+            content += `<strong>Invoice Details</strong>`;
+            content += `<table><tbody>`;
+            for (const [key, value] of Object.entries(result.data.header)) {
+                content += `<tr>
+                  <th>${key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</th>
+                  <td>${value}</td>
+                </tr>`;
+            }
+            content += `</tbody></table>`;
+        }
+        // Line Items Table
+        if (result.data.line_items && result.data.line_items.length > 0) {
+            content += `<strong>Line Items</strong>`;
+            content += `<table><thead><tr>`;
+            Object.keys(result.data.line_items[0]).forEach(key => {
+                content += `<th>${key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</th>`;
+            });
+            content += `</tr></thead><tbody>`;
+            result.data.line_items.forEach(item => {
+                content += `<tr>`;
+                Object.values(item).forEach(val => {
+                    content += `<td>${val}</td>`;
+                });
+                content += `</tr>`;
+            });
+            content += `</tbody></table>`;
+        }
+        if (result.downloadLink) {
+            content += `<a class="download-link" href="${result.downloadLink}" download="${result.fileName.replace('.pdf', '.json')}">Download JSON</a>`;
+        }
+    } else {
+        content += `<p style="color:#ef4444;"><strong>Error:</strong> ${result.error}</p>`;
+    }
+    resultItem.innerHTML = content;
+    resultsContainer.appendChild(resultItem);
+});
+            } catch (error) {
+                console.error('Error during upload:', error);
+                statusDiv.innerHTML = `Error during upload: ${error.message}`;
+                statusDiv.classList.remove('progress');
+            }
+        });
+    </script>
+</body>
+</html>
