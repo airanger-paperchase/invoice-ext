@@ -18,7 +18,9 @@ echo ""
 if [ -f "backend/.env" ]; then
     echo "🔧 Updating backend configuration..."
     sed -i "s/PORT=.*/PORT=$BACKEND_PORT/" backend/.env
+    sed -i "s/SERVER_HOST=.*/SERVER_HOST=$SERVER_IP/" backend/.env
     echo "✅ Backend port updated to $BACKEND_PORT"
+    echo "✅ Backend server host updated to $SERVER_IP"
 else
     echo "⚠️  Backend .env file not found. Please create it first."
 fi

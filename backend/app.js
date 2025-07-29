@@ -258,5 +258,7 @@ app.get('/api/stored-invoices', (req, res) => {
 
 
 app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
+    const serverAddress = process.env.SERVER_HOST || 'localhost';
+    console.log(`Server listening at http://${serverAddress}:${port}`);
+    console.log(`CORS: Environment-based configuration active`);
 });

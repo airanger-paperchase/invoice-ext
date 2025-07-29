@@ -19,7 +19,9 @@ REM Update backend .env
 if exist "backend\.env" (
     echo 🔧 Updating backend configuration...
     powershell -Command "(Get-Content 'backend\.env') -replace 'PORT=.*', 'PORT=%BACKEND_PORT%' | Set-Content 'backend\.env'"
+    powershell -Command "(Get-Content 'backend\.env') -replace 'SERVER_HOST=.*', 'SERVER_HOST=%SERVER_IP%' | Set-Content 'backend\.env'"
     echo ✅ Backend port updated to %BACKEND_PORT%
+    echo ✅ Backend server host updated to %SERVER_IP%
 ) else (
     echo ⚠️  Backend .env file not found. Please create it first.
 )

@@ -6,16 +6,10 @@ import {
   Download,
   FileText,
   Receipt,
-  CreditCard,
-  Calendar,
-  Building,
   DollarSign,
-  Eye,
   ChevronDown,
   ChevronRight,
-  TrendingUp,
-  BarChart3,
-  PieChart
+  TrendingUp
 } from "lucide-react";
  
 interface ResultsProps {

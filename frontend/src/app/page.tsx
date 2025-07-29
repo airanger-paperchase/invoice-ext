@@ -1,10 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { FileUpload } from "@/components/Navbar/Upload"
-import { ResultsTable } from "@/components/Navbar/Results-table"
+import FileUpload from "@/components/Navbar/Upload"
+import ResultsTable from "@/components/Navbar/Results-table"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 
 export interface ProcessingResult {
   fileName: string
@@ -16,19 +15,17 @@ export interface ProcessingResult {
 
 export default function Home() {
   const [results, setResults] = useState<ProcessingResult[]>([])
-  const [isProcessing, setIsProcessing] = useState(false)
 
-  const handleUploadComplete = (newResults: ProcessingResult[]) => {
+  const handleResults = (newResults: ProcessingResult[]) => {
     setResults((prev) => {
       const updatedResults = [...prev, ...newResults];
       console.log("Upload Complete. Results:", updatedResults);
       return updatedResults;
     });
-    setIsProcessing(false)
   }
 
-  const handleUploadStart = () => {
-    setIsProcessing(true)
+  const handleStatus = (status: string) => {
+    console.log("Status:", status);
   }
 
   const clearResults = () => {
@@ -57,9 +54,8 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <FileUpload
-              onUploadComplete={handleUploadComplete}
-              onUploadStart={handleUploadStart}
-              isProcessing={isProcessing}
+              onResults={handleResults}
+              onStatus={handleStatus}
             />
           </CardContent>
         </Card>
@@ -67,7 +63,7 @@ export default function Home() {
         {/* Results Section */}
         {results.length > 0 && (
           <>
-            <Separator className="my-8" />
+            <div className="my-8 border-t border-gray-200"></div>
             <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>

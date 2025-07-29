@@ -1,15 +1,8 @@
 
-import { Sidebar } from '../Sidebar/Sidebar';
-import { Navbar } from '../Navbar';
 import FileUpload from '../Navbar/Upload';
+import { Navbar } from '../Navbar';
 import Results from '../Navbar/Results-table';
 import type { ExtractionResult } from '../Navbar/Upload';
-import { Hero } from '../Hero';
-
-import { Dashboard } from '../Dashboard';
-import { CallToAction } from '../CallToAction';
-import { Footer } from '../Footer';
-import { Features } from '../features/Features';
 import { useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { uploadSingleInvoice } from '../../components/api';
@@ -66,19 +59,8 @@ function MainPageLayout() {
         ));
     };
 
-    // Custom handler to track which files are being processed
-    const handleStatus = (statusMsg: string) => {
-        setStatus(statusMsg);
-        // If status indicates processing, try to extract file names from the message
-        if (statusMsg.startsWith('Processing')) {
-            // This is a bit of a hack: get file names from the results if available
-            // But ideally, FileUpload should call a callback with the list of files being processed
-        }
-    };
-
     return (
         <div className="min-h-screen flex ">
-            {/* <Sidebar /> */}
             <div className="flex-1 flex flex-col">
                 <Navbar />
                 <main className="flex-1 container mx-auto px-8 space-y-4">
@@ -108,11 +90,6 @@ function MainPageLayout() {
                       ref={fileInputRef}
                       onChange={handleReuploadFile}
                     />
-                    {/* <Hero /> */}
-                    {/* <Features /> */}
-                    {/* <Dashboard /> */}
-                    {/* <CallToAction /> */}
-                    {/* <Footer /> */}
                 </main>
             </div>
         </div>
