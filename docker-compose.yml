@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  invoice-extractor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: invoice-extractor-app
+    ports:
+      - "6500:6500"
+    environment:
+      - NODE_ENV=production
+      - PORT=6500
+      # Add your Azure credentials here or use .env file
+      # - AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT=your_endpoint
+      # - AZURE_DOCUMENT_INTELLIGENCE_KEY=your_key
+      # - AZURE_OPENAI_ENDPOINT=your_openai_endpoint
+      # - AZURE_OPENAI_API_KEY=your_openai_key
+      # - AZURE_OPENAI_DEPLOYMENT=your_deployment_name
+      # - AZURE_OPENAI_IMAGE_DEPLOYMENT=your_image_deployment
+      # - API_VERSION_GA=your_api_version
+    volumes:
+      # Persist extracted data and markdown files
+      - invoice_data:/app/backend/extracted_invoice_data_json
+      - markdown_data:/app/backend/markdown data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:6500/api/stored-invoices', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  invoice_data:
+    driver: local
+  markdown_data:
+    driver: local
