@@ -27,6 +27,7 @@ const corsOptions = {
         const allowedOrigins = [
             'http://localhost:5173',
             'http://localhost:3000',
+            'http://localhost:6500',
             'http://10.200.7.77:6500',
             'http://10.200.7.77:5173',
             'http://10.200.7.77:3000'
@@ -49,9 +50,6 @@ app.use(cors(corsOptions));
 // Set up multer for file uploads
 const storage = multer.memoryStorage(); // Store files in memory as buffers
 const upload = multer({ storage: storage });
-
-// Serve static files (HTML, CSS, JS) from the 'static' directory (frontend build)
-app.use(express.static(path.join(__dirname, 'static')));
 
 // Create a directory for saving JSON results
 const jsonOutputDir = 'extracted_invoice_data_json';
@@ -254,11 +252,6 @@ app.get('/api/stored-invoices', (req, res) => {
         }
         res.json(results);
     });
-});
-
-// Catch-all route to serve the frontend for any non-API routes
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'static', 'index.html'));
 });
 
 app.listen(port, () => {
