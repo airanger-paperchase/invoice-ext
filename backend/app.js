@@ -7,10 +7,44 @@ const fs = require('fs');
 const { extractInvoiceMarkdown, callAzureOpenAIInvoiceFields, fileBufferToBase64, callAzureOpenAIInvoiceFieldsBase64 } = require('./dataExtract');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Enable CORS for frontend (this must be FIRST, before any other app.use or routes)
-app.use(cors({ origin: 'http://localhost:5173' }));
+// Enable CORS for frontend - flexible configuration
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
+// CORS configuration
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        // In development, allow all origins
+        if (isDevelopment) {
+            return callback(null, true);
+        }
+        
+        // In production, you can specify allowed origins
+        const allowedOrigins = [
+            'http://localhost:5173',
+            'http://localhost:3000',
+            'http://10.200.7.77:6500',
+            'http://10.200.7.77:5173',
+            'http://10.200.7.77:3000'
+        ];
+        
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.log('CORS blocked origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+};
+
+app.use(cors(corsOptions));
 
 // Set up multer for file uploads
 const storage = multer.memoryStorage(); // Store files in memory as buffers

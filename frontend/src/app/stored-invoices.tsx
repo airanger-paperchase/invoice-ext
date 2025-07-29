@@ -5,6 +5,7 @@ import ResultsTable from "@/components/Navbar/Results-table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
+import { getStoredInvoices } from "@/components/api";
 
 export interface ExtractionResult {
   fileName: string;
@@ -26,9 +27,7 @@ export default function StoredInvoicesPage() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch("http://localhost:3000/api/stored-invoices");
-        if (!res.ok) throw new Error("Failed to fetch stored invoices");
-        const data = await res.json();
+        const data = await getStoredInvoices();
         setResults(data);
       } catch (err: any) {
         setError(err.message || "Unknown error");

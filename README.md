@@ -10,6 +10,7 @@ A full-stack web application for extracting and analyzing invoice data using Azu
 - **Data Analytics**: View extracted invoice data with analytics and visualizations
 - **Export Capabilities**: Download extracted data in JSON format
 - **Real-time Processing**: Live processing status and progress tracking
+- **Network Deployment Ready**: Configured for both local and network deployment
 
 ## 📋 Prerequisites
 
@@ -80,6 +81,9 @@ cp backend/env.example backend/.env
 Then edit `backend/.env` with your Azure credentials:
 
 ```env
+# Server Configuration
+PORT=3000
+
 # Azure Document Intelligence
 AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT=your_document_intelligence_endpoint
 AZURE_DOCUMENT_INTELLIGENCE_KEY=your_document_intelligence_key
@@ -104,7 +108,11 @@ cp frontend/env.example frontend/.env
 Then edit `frontend/.env`:
 
 ```env
+# For local development
 VITE_API_BASE_URL=http://localhost:3000
+
+# For network deployment (uncomment and modify as needed)
+# VITE_API_BASE_URL=http://10.200.7.77:6500
 ```
 
 ## 🚀 Running the Application
@@ -116,7 +124,7 @@ cd backend
 npm start
 ```
 
-The backend server will start on `http://localhost:3000`
+The backend server will start on the configured port (default: `http://localhost:3000`)
 
 ### 2. Start the Frontend Development Server
 
@@ -126,6 +134,36 @@ npm run dev
 ```
 
 The frontend application will start on `http://localhost:5173`
+
+## 🌐 Network Deployment
+
+### For Network/Production Deployment:
+
+1. **Update Backend Port**: Set the `PORT` environment variable in `backend/.env`:
+   ```env
+   PORT=6500
+   ```
+
+2. **Update Frontend API URL**: Set the `VITE_API_BASE_URL` in `frontend/.env`:
+   ```env
+   VITE_API_BASE_URL=http://10.200.7.77:6500
+   ```
+
+3. **CORS Configuration**: The backend is already configured to allow connections from common network addresses including:
+   - `http://localhost:5173`
+   - `http://localhost:3000`
+   - `http://10.200.7.77:6500`
+   - `http://10.200.7.77:5173`
+   - `http://10.200.7.77:3000`
+
+4. **Start Services**:
+   ```bash
+   # Backend (on server machine)
+   cd backend && npm start
+   
+   # Frontend (on client machine or same server)
+   cd frontend && npm run dev
+   ```
 
 ## 📁 Project Structure
 
@@ -154,8 +192,9 @@ invoice_extractor_node/
 ### Backend API
 
 - `POST /api/upload` - Upload and process PDF invoices
+- `POST /api/upload-base64` - Upload and process PDF invoices using base64
 - `GET /download/:filename` - Download extracted JSON data
-- `GET /api/invoices` - Get list of processed invoices
+- `GET /api/stored-invoices` - Get list of processed invoices
 
 ### Request Format
 
@@ -164,7 +203,7 @@ invoice_extractor_node/
 const formData = new FormData();
 formData.append('invoicePdfs', file);
 
-fetch('http://localhost:3000/api/upload', {
+fetch('http://your-server:port/api/upload', {
   method: 'POST',
   body: formData
 });
@@ -276,6 +315,7 @@ fetch('http://localhost:3000/api/upload', {
 2. **Azure API Errors**: Verify your Azure credentials and service endpoints
 3. **File Upload Issues**: Check file size limits and supported formats
 4. **Environment Variables**: Ensure all required environment variables are set
+5. **Network Connection**: For network deployment, ensure firewall allows the configured ports
 
 ### Debug Mode
 

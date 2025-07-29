@@ -5,6 +5,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
+    "start-simple": "node app-simple-cors.js",
+    "dev-simple": "nodemon app-simple-cors.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
