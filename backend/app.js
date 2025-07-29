@@ -4,7 +4,7 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { extractInvoiceMarkdownWithProgress, callAzureOpenAIInvoiceFields, fileBufferToBase64, callAzureOpenAIInvoiceFieldsBase64 } = require('./dataExtract');
+const { extractInvoiceMarkdown, callAzureOpenAIInvoiceFields, fileBufferToBase64, callAzureOpenAIInvoiceFieldsBase64 } = require('./dataExtract');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -69,7 +69,7 @@ function extractJsonFromString(str) {
     return str;
 }
 
-// Route for file upload and processing with progress tracking
+// Route for file upload and processing
 app.post('/api/upload', upload.array('invoicePdfs'), async (req, res) => {
     console.log('POST /api/upload called');
     const uploadedFiles = req.files;
@@ -83,27 +83,19 @@ app.post('/api/upload', upload.array('invoicePdfs'), async (req, res) => {
     for (const [i, file] of uploadedFiles.entries()) {
         const fileName = file.originalname;
         console.log(`Processing file: ${fileName}`);
-        
         try {
             // Read file buffer from multer
             const fileBuffer = file.buffer;
 
-            // Progress tracking function
-            const onProgress = (message, percentage) => {
-                console.log(`[${fileName}] ${message} (${percentage}%)`);
-            };
-
-            // Extract markdown with page-by-page processing
-            console.log(`Calling extractInvoiceMarkdownWithProgress for ${fileName}`);
-            const markdownContent = await extractInvoiceMarkdownWithProgress(fileBuffer, onProgress);
-            console.log(`Markdown content extracted successfully for ${fileName}`);
-            
+            // Extract markdown
+            console.log(`Calling extractInvoiceMarkdown for ${fileName}`);
+            const markdownContent = await extractInvoiceMarkdown(fileBuffer);
+            console.log(`Markdown content: ${markdownContent}`);
             // Ensure the 'markdown data' directory exists
             const markdownDir = 'markdown data';
             if (!fs.existsSync(markdownDir)) {
                 fs.mkdirSync(markdownDir);
             }
-            
             // Save the markdownContent to a .md file named after the original file
             const mdFileName = `${path.parse(fileName).name}.md`;
             const mdFilePath = path.join(markdownDir, mdFileName);
@@ -112,8 +104,7 @@ app.post('/api/upload', upload.array('invoicePdfs'), async (req, res) => {
             // Call Azure OpenAI
             console.log(`Calling callAzureOpenAIInvoiceFields for ${fileName}`);
             const openaiResultString = await callAzureOpenAIInvoiceFields(markdownContent);
-            console.log(`OpenAI result string received for ${fileName}`);
-            
+            console.log(`OpenAI result string: ${openaiResultString}`);
             let parsedJsonResult;
             try {
                 // Extract JSON from the response string
@@ -264,6 +255,7 @@ app.get('/api/stored-invoices', (req, res) => {
         res.json(results);
     });
 });
+
 
 app.listen(port, () => {
     const serverAddress = process.env.SERVER_HOST || 'localhost';
