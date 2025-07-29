@@ -1,16 +1,16 @@
 version: '3.8'
 
 services:
-  invoice-extractor:
+  backend:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: invoice-extractor-app
+      dockerfile: Dockerfile.backend
+    container_name: invoice-extractor-backend
     ports:
-      - "6500:6500"
+      - "3000:3000"
     environment:
       - NODE_ENV=production
-      - PORT=6500
+      - PORT=3000
       # Add your Azure credentials here or use .env file
       # - AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT=your_endpoint
       # - AZURE_DOCUMENT_INTELLIGENCE_KEY=your_key
@@ -25,11 +25,24 @@ services:
       - markdown_data:/app/backend/markdown data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:6500/api/stored-invoices', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/stored-invoices', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: invoice-extractor-frontend
+    ports:
+      - "6500:6500"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:3000
+    depends_on:
+      - backend
+    restart: unless-stopped
 
 volumes:
   invoice_data:

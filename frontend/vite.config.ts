@@ -12,7 +12,7 @@ export default defineConfig({
   },
 
   build: {
-        outDir: "../backend/static",
+        outDir: "dist",
         emptyOutDir: true,
         sourcemap: true
     },
@@ -34,7 +34,6 @@ export default defineConfig({
         "./",
         // Allow serving files from node_modules
         "./node_modules/",
-        "../backend/static/",
       ],
     },
   },

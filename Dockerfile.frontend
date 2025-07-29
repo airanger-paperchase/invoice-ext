@@ -1,0 +1,47 @@
+# Use Node.js 18 Alpine as base image for smaller size
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/cache/apk/*
+
+# Copy package files for frontend
+COPY frontend/package*.json ./frontend/
+
+# Install dependencies for frontend
+RUN cd frontend && npm ci
+
+# Copy frontend source code
+COPY frontend/ ./frontend/
+
+# Set working directory to frontend
+WORKDIR /app/frontend
+
+# Build frontend
+RUN npm run build
+
+# Install serve to serve the built frontend
+RUN npm install -g serve
+
+# Expose port for the frontend server
+EXPOSE 6500
+
+# Create a startup script
+RUN echo '#!/bin/sh' > /app/start.sh && \
+    echo 'echo "Starting Invoice Extractor Frontend..."' >> /app/start.sh && \
+    echo 'cd /app/frontend' >> /app/start.sh && \
+    echo 'serve -s dist -l 6500' >> /app/start.sh && \
+    chmod +x /app/start.sh
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=6500
+
+# Start the frontend server
+CMD ["/app/start.sh"]

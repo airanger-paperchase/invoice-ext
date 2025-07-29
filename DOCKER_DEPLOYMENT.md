@@ -1,6 +1,6 @@
 # Invoice Extractor - Docker Deployment Guide
 
-This guide explains how to deploy the Invoice Extractor application using Docker.
+This guide explains how to deploy the Invoice Extractor application using Docker with separate frontend and backend services.
 
 ## 📋 Prerequisites
 
@@ -34,8 +34,9 @@ This guide explains how to deploy the Invoice Extractor application using Docker
    ```
 
 4. **Access the application:**
-   - Frontend: http://localhost:6500
-   - API Health Check: http://localhost:6500/api/stored-invoices
+   - **Frontend UI:** http://localhost:6500
+   - **Backend API:** http://localhost:3000
+   - **API Health Check:** http://localhost:3000/api/stored-invoices
 
 ### Option 2: Using Deployment Scripts
 
@@ -52,33 +53,49 @@ deploy.bat
 
 ### Option 3: Manual Docker Commands
 
-1. **Build the image:**
+1. **Build the images:**
    ```bash
-   docker build -t invoice-extractor:latest .
+   docker build -t invoice-extractor-backend:latest -f Dockerfile.backend .
+   docker build -t invoice-extractor-frontend:latest -f Dockerfile.frontend .
    ```
 
-2. **Run the container:**
+2. **Run the containers:**
    ```bash
+   # Backend
    docker run -d \
-     --name invoice-extractor-app \
-     -p 6500:6500 \
+     --name invoice-extractor-backend \
+     -p 3000:3000 \
      --env-file .env \
      -v invoice_data:/app/backend/extracted_invoice_data_json \
      -v markdown_data:/app/backend/markdown\ data \
      --restart unless-stopped \
-     invoice-extractor:latest
+     invoice-extractor-backend:latest
+
+   # Frontend
+   docker run -d \
+     --name invoice-extractor-frontend \
+     -p 6500:6500 \
+     -e VITE_API_BASE_URL=http://localhost:3000 \
+     --restart unless-stopped \
+     invoice-extractor-frontend:latest
    ```
 
 ## 📁 Container Structure
 
+### Backend Container
 ```
-/app/
-├── backend/           # Backend Node.js application
-│   ├── app.js        # Main server file
-│   ├── dataExtract.js # Azure Document Intelligence integration
-│   └── static/       # Built frontend files
-├── frontend/         # Frontend React application (source)
-└── start.sh         # Startup script
+/app/backend/
+├── app.js              # Main server file
+├── dataExtract.js      # Azure Document Intelligence integration
+├── extracted_invoice_data_json/  # Data persistence
+└── markdown data/      # Markdown files
+```
+
+### Frontend Container
+```
+/app/frontend/
+├── dist/               # Built React application
+└── serve               # Static file server
 ```
 
 ## 🔧 Configuration
@@ -94,8 +111,12 @@ deploy.bat
 | `AZURE_OPENAI_DEPLOYMENT` | Azure OpenAI deployment name | Yes |
 | `AZURE_OPENAI_IMAGE_DEPLOYMENT` | Azure OpenAI image deployment | Yes |
 | `API_VERSION_GA` | Azure API version | Yes |
-| `PORT` | Server port (default: 6500) | No |
-| `NODE_ENV` | Environment (default: production) | No |
+| `VITE_API_BASE_URL` | Backend API URL (default: http://localhost:3000) | No |
+
+### Ports
+
+- **Frontend:** 6500 (React UI)
+- **Backend:** 3000 (API server)
 
 ### Volumes
 
@@ -108,85 +129,99 @@ The application uses Docker volumes to persist data:
 
 ### View Logs
 ```bash
-docker logs invoice-extractor-app
+# Backend logs
+docker logs invoice-extractor-backend
+
+# Frontend logs
+docker logs invoice-extractor-frontend
 ```
 
 ### Stop the Application
 ```bash
-docker stop invoice-extractor-app
+docker stop invoice-extractor-backend invoice-extractor-frontend
 ```
 
 ### Restart the Application
 ```bash
-docker restart invoice-extractor-app
+docker restart invoice-extractor-backend invoice-extractor-frontend
 ```
 
-### Remove the Container
+### Remove the Containers
 ```bash
-docker rm -f invoice-extractor-app
+docker rm -f invoice-extractor-backend invoice-extractor-frontend
 ```
 
 ### Update the Application
 ```bash
-# Stop and remove existing container
-docker stop invoice-extractor-app
-docker rm invoice-extractor-app
+# Stop and remove existing containers
+docker stop invoice-extractor-backend invoice-extractor-frontend
+docker rm invoice-extractor-backend invoice-extractor-frontend
 
 # Rebuild and run
-docker build -t invoice-extractor:latest .
-docker run -d --name invoice-extractor-app -p 6500:6500 --env-file .env -v invoice_data:/app/backend/extracted_invoice_data_json -v markdown_data:/app/backend/markdown\ data --restart unless-stopped invoice-extractor:latest
+docker build -t invoice-extractor-backend:latest -f Dockerfile.backend .
+docker build -t invoice-extractor-frontend:latest -f Dockerfile.frontend .
+docker run -d --name invoice-extractor-backend -p 3000:3000 --env-file .env -v invoice_data:/app/backend/extracted_invoice_data_json -v markdown_data:/app/backend/markdown\ data --restart unless-stopped invoice-extractor-backend:latest
+docker run -d --name invoice-extractor-frontend -p 6500:6500 -e VITE_API_BASE_URL=http://localhost:3000 --restart unless-stopped invoice-extractor-frontend:latest
 ```
 
 ## 🔍 Health Check
 
-The container includes a health check that verifies the API is responding:
+The backend container includes a health check that verifies the API is responding:
 
 ```bash
 # Check container health
 docker ps
 
 # Manual health check
-curl http://localhost:6500/api/stored-invoices
+curl http://localhost:3000/api/stored-invoices
 ```
 
 ## 🐛 Troubleshooting
 
 ### Common Issues
 
-1. **Container fails to start:**
+1. **Frontend not loading:**
    - Check if port 6500 is available
-   - Verify environment variables are set correctly
-   - Check Docker logs: `docker logs invoice-extractor-app`
+   - Verify frontend container is running: `docker logs invoice-extractor-frontend`
+   - Check if backend is accessible from frontend
 
-2. **Azure API errors:**
+2. **Backend API errors:**
+   - Check if port 3000 is available
+   - Verify environment variables are set correctly
+   - Check Docker logs: `docker logs invoice-extractor-backend`
+
+3. **Azure API errors:**
    - Verify Azure credentials in `.env` file
    - Check Azure service quotas and limits
    - Ensure API endpoints are accessible
-
-3. **Frontend not loading:**
-   - Verify the frontend was built correctly
-   - Check if static files are in `/app/backend/static/`
-   - Review build logs during Docker build
 
 ### Debug Mode
 
 To run in debug mode with more verbose logging:
 
 ```bash
+# Backend debug
 docker run -it --rm \
-  --name invoice-extractor-debug \
-  -p 6500:6500 \
+  --name invoice-extractor-backend-debug \
+  -p 3000:3000 \
   --env-file .env \
   -v invoice_data:/app/backend/extracted_invoice_data_json \
   -v markdown_data:/app/backend/markdown\ data \
-  invoice-extractor:latest
+  invoice-extractor-backend:latest
+
+# Frontend debug
+docker run -it --rm \
+  --name invoice-extractor-frontend-debug \
+  -p 6500:6500 \
+  -e VITE_API_BASE_URL=http://localhost:3000 \
+  invoice-extractor-frontend:latest
 ```
 
 ## 📊 Monitoring
 
 ### Resource Usage
 ```bash
-docker stats invoice-extractor-app
+docker stats invoice-extractor-backend invoice-extractor-frontend
 ```
 
 ### Disk Usage
@@ -202,7 +237,10 @@ docker system prune -a
 ## 🔒 Security Considerations
 
 1. **Environment Variables:** Never commit `.env` files to version control
-2. **Network Access:** The container exposes port 6500 - ensure firewall rules are appropriate
+2. **Network Access:** 
+   - Frontend exposes port 6500
+   - Backend exposes port 3000
+   - Ensure firewall rules are appropriate
 3. **Data Persistence:** Volumes contain sensitive invoice data - secure accordingly
 4. **Azure Credentials:** Use Azure Key Vault or similar for production deployments
 
@@ -220,7 +258,7 @@ For production deployment, consider:
 
 If you encounter issues:
 
-1. Check the Docker logs: `docker logs invoice-extractor-app`
+1. Check the Docker logs: `docker logs invoice-extractor-backend` and `docker logs invoice-extractor-frontend`
 2. Verify environment variables are correct
 3. Ensure Azure services are accessible
 4. Check the application health endpoint

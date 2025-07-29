@@ -11,48 +11,38 @@ RUN apk add --no-cache \
     g++ \
     && rm -rf /var/cache/apk/*
 
-# Copy package files for both frontend and backend
+# Copy package files for backend
 COPY backend/package*.json ./backend/
-COPY frontend/package*.json ./frontend/
 
-# Install dependencies for both frontend and backend
+# Install dependencies for backend
 RUN cd backend && npm ci --only=production
-RUN cd frontend && npm ci
 
-# Copy source code
+# Copy backend source code
 COPY backend/ ./backend/
-COPY frontend/ ./frontend/
 
-# Build frontend to dist folder
-WORKDIR /app/frontend
-RUN npm run build
-
-# Copy built frontend to backend static directory
-RUN cp -r dist/* ../backend/static/
-
-# Set working directory back to backend
+# Set working directory to backend
 WORKDIR /app/backend
 
 # Create necessary directories
 RUN mkdir -p extracted_invoice_data_json markdown\ data
 
 # Expose port for the backend server
-EXPOSE 6500
+EXPOSE 3000
 
 # Create a startup script
 RUN echo '#!/bin/sh' > /app/start.sh && \
-    echo 'echo "Starting Invoice Extractor Application..."' >> /app/start.sh && \
+    echo 'echo "Starting Invoice Extractor Backend..."' >> /app/start.sh && \
     echo 'cd /app/backend' >> /app/start.sh && \
     echo 'node app.js' >> /app/start.sh && \
     chmod +x /app/start.sh
 
 # Set environment variables
 ENV NODE_ENV=production
-ENV PORT=6500
+ENV PORT=3000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:6500/api/stored-invoices', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+    CMD node -e "require('http').get('http://localhost:3000/api/stored-invoices', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 # Start the application
 CMD ["/app/start.sh"]

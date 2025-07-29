@@ -50,8 +50,8 @@ app.use(cors(corsOptions));
 const storage = multer.memoryStorage(); // Store files in memory as buffers
 const upload = multer({ storage: storage });
 
-// Serve static files (HTML, CSS, JS) from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files (HTML, CSS, JS) from the 'static' directory (frontend build)
+app.use(express.static(path.join(__dirname, 'static')));
 
 // Create a directory for saving JSON results
 const jsonOutputDir = 'extracted_invoice_data_json';
@@ -256,6 +256,10 @@ app.get('/api/stored-invoices', (req, res) => {
     });
 });
 
+// Catch-all route to serve the frontend for any non-API routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'static', 'index.html'));
+});
 
 app.listen(port, () => {
     const serverAddress = process.env.SERVER_HOST || 'localhost';

@@ -10,44 +10,56 @@ if ! docker info > /dev/null 2>&1; then
     exit 1
 fi
 
-# Build the Docker image
-echo "📦 Building Docker image..."
-docker build -t invoice-extractor:latest .
+# Build the Docker images
+echo "📦 Building Docker images..."
+docker build -t invoice-extractor-backend:latest -f Dockerfile.backend .
+docker build -t invoice-extractor-frontend:latest -f Dockerfile.frontend .
 
 if [ $? -ne 0 ]; then
     echo "❌ Docker build failed!"
     exit 1
 fi
 
-echo "✅ Docker image built successfully!"
+echo "✅ Docker images built successfully!"
 
-# Stop and remove existing container if it exists
-echo "🔄 Stopping existing container..."
-docker stop invoice-extractor-app 2>/dev/null || true
-docker rm invoice-extractor-app 2>/dev/null || true
+# Stop and remove existing containers if they exist
+echo "🔄 Stopping existing containers..."
+docker stop invoice-extractor-backend invoice-extractor-frontend 2>/dev/null || true
+docker rm invoice-extractor-backend invoice-extractor-frontend 2>/dev/null || true
 
-# Run the container
-echo "🚀 Starting Invoice Extractor application..."
+# Run the backend container
+echo "🚀 Starting Invoice Extractor Backend..."
 docker run -d \
-    --name invoice-extractor-app \
-    -p 6500:6500 \
+    --name invoice-extractor-backend \
+    -p 3000:3000 \
     --env-file .env \
     -v invoice_data:/app/backend/extracted_invoice_data_json \
     -v markdown_data:/app/backend/markdown\ data \
     --restart unless-stopped \
-    invoice-extractor:latest
+    invoice-extractor-backend:latest
+
+# Run the frontend container
+echo "🚀 Starting Invoice Extractor Frontend..."
+docker run -d \
+    --name invoice-extractor-frontend \
+    -p 6500:6500 \
+    -e VITE_API_BASE_URL=http://localhost:3000 \
+    --restart unless-stopped \
+    invoice-extractor-frontend:latest
 
 if [ $? -eq 0 ]; then
     echo "✅ Invoice Extractor is now running!"
-    echo "🌐 Access the application at: http://localhost:6500"
-    echo "📊 Health check endpoint: http://localhost:6500/api/stored-invoices"
+    echo "🌐 Frontend: http://localhost:6500"
+    echo "🔧 Backend API: http://localhost:3000"
+    echo "📊 Health check endpoint: http://localhost:3000/api/stored-invoices"
     echo ""
     echo "📋 Useful commands:"
-    echo "  - View logs: docker logs invoice-extractor-app"
-    echo "  - Stop app: docker stop invoice-extractor-app"
-    echo "  - Restart app: docker restart invoice-extractor-app"
-    echo "  - Remove app: docker rm -f invoice-extractor-app"
+    echo "  - View backend logs: docker logs invoice-extractor-backend"
+    echo "  - View frontend logs: docker logs invoice-extractor-frontend"
+    echo "  - Stop all: docker stop invoice-extractor-backend invoice-extractor-frontend"
+    echo "  - Restart all: docker restart invoice-extractor-backend invoice-extractor-frontend"
+    echo "  - Remove all: docker rm -f invoice-extractor-backend invoice-extractor-frontend"
 else
-    echo "❌ Failed to start the container!"
+    echo "❌ Failed to start the containers!"
     exit 1
 fi
