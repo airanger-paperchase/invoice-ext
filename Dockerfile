@@ -23,12 +23,9 @@ RUN cd frontend && npm ci
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
 
-# Build frontend
+# Build frontend (already builds to backend/static)
 WORKDIR /app/frontend
 RUN npm run build
-
-# Copy built frontend to backend static directory
-RUN cp -r dist/* ../backend/static/
 
 # Set working directory back to backend
 WORKDIR /app/backend
