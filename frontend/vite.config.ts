@@ -18,6 +18,8 @@ export default defineConfig({
     },
 
   server: {
+    port: 6500,
+    host: true, // Allow external connections
     proxy: {
       '/api': {
         target: process.env.VITE_API_BASE_URL || 'http://localhost:3000',
@@ -31,7 +33,8 @@ export default defineConfig({
         // Allow serving files from the root directory
         "./",
         // Allow serving files from node_modules
-        "C:/Users/MahishaMudaliar/node_modules/",
+        "./node_modules/",
+        "../backend/static/",
       ],
     },
   },
