@@ -22,7 +22,7 @@ export default defineConfig({
     host: true, // Allow external connections
     proxy: {
       '/api': {
-        target: process.env.VITE_API_BASE_URL || 'http://localhost:3000',
+        target: process.env.VITE_API_BASE_URL || 'http://10.200.7.77:6511',
         changeOrigin: true,
         secure: false,
       },
