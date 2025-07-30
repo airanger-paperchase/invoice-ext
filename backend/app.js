@@ -8,6 +8,7 @@ const { extractInvoiceMarkdown, callAzureOpenAIInvoiceFields, fileBufferToBase64
 
 const app = express();
 const port = process.env.PORT || 3000;
+const host = process.env.SERVER_HOST || '0.0.0.0';
 
 // Enable CORS for frontend - flexible configuration
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -16,7 +17,9 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 const corsOptions = {
     origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
+        if (!origin) {
+          return callback(null, true);
+        }
         
         // In development, allow all origins
         if (isDevelopment) {
@@ -30,7 +33,8 @@ const corsOptions = {
             'http://localhost:6500',
             'http://10.200.7.77:6500',
             'http://10.200.7.77:5173',
-            'http://10.200.7.77:3000'
+            'http://10.200.7.77:3000',
+            'http://10.200.7.77:6511'
         ];
         
         if (allowedOrigins.indexOf(origin) !== -1) {
@@ -201,7 +205,7 @@ app.post('/api/upload-base64', upload.array('invoicePdfs'), async (req, res) => 
 
 // Route to download generated JSON files
 app.get('/download/:filename', (req, res) => {
-    const filename = req.params.filename;
+    const {filename} = req.params;
     const filePath = path.join(jsonOutputDir, filename);
     console.log(`GET /download/${filename}`);
 
@@ -254,8 +258,7 @@ app.get('/api/stored-invoices', (req, res) => {
     });
 });
 
-app.listen(port, () => {
-    const serverAddress = process.env.SERVER_HOST || 'localhost';
-    console.log(`Server listening at http://${serverAddress}:${port}`);
+app.listen(port, host, () => {
+    console.log(`Server listening at http://${host}:${port}`);
     console.log(`CORS: Environment-based configuration active`);
 });

@@ -31,8 +31,9 @@ docker rm invoice-extractor-backend invoice-extractor-frontend 2>/dev/null || tr
 echo "🚀 Starting Invoice Extractor Backend..."
 docker run -d \
     --name invoice-extractor-backend \
-    -p 3000:3000 \
+    -p 10.200.7.77:6511:3000 \
     --env-file .env \
+    -e SERVER_HOST=10.200.7.77 \
     -v invoice_data:/app/backend/extracted_invoice_data_json \
     -v markdown_data:/app/backend/markdown\ data \
     --restart unless-stopped \
@@ -42,16 +43,16 @@ docker run -d \
 echo "🚀 Starting Invoice Extractor Frontend..."
 docker run -d \
     --name invoice-extractor-frontend \
-    -p 6500:6500 \
-    -e VITE_API_BASE_URL=http://localhost:3000 \
+    -p 10.200.7.77:6500:6500 \
+    -e VITE_API_BASE_URL=http://10.200.7.77:6511 \
     --restart unless-stopped \
     invoice-extractor-frontend:latest
 
 if [ $? -eq 0 ]; then
     echo "✅ Invoice Extractor is now running!"
-    echo "🌐 Frontend: http://localhost:6500"
-    echo "🔧 Backend API: http://localhost:3000"
-    echo "📊 Health check endpoint: http://localhost:3000/api/stored-invoices"
+    echo "🌐 Frontend: http://10.200.7.77:6500"
+    echo "🔧 Backend API: http://10.200.7.77:6511"
+    echo "📊 Health check endpoint: http://10.200.7.77:6511/api/stored-invoices"
     echo ""
     echo "📋 Useful commands:"
     echo "  - View backend logs: docker logs invoice-extractor-backend"

@@ -7,10 +7,11 @@ services:
       dockerfile: Dockerfile.backend
     container_name: invoice-extractor-backend
     ports:
-      - "3000:3000"
+      - "10.200.7.77:6511:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - SERVER_HOST=10.200.7.77
       # Add your Azure credentials here or use .env file
       # - AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT=your_endpoint
       # - AZURE_DOCUMENT_INTELLIGENCE_KEY=your_key
@@ -37,9 +38,9 @@ services:
       dockerfile: Dockerfile.frontend
     container_name: invoice-extractor-frontend
     ports:
-      - "6500:6500"
+      - "10.200.7.77:6500:6500"
     environment:
-      - VITE_API_BASE_URL=http://localhost:3000
+      - VITE_API_BASE_URL=http://10.200.7.77:6511
     depends_on:
       - backend
     restart: unless-stopped
