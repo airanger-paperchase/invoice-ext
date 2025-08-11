@@ -18,6 +18,7 @@ export interface ExtractionResult {
   data?: any;
   error?: string;
   downloadLink?: string;
+  extraction_duration?: number;
 }
 
 interface FileUploadProps {

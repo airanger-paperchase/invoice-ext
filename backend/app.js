@@ -4,7 +4,7 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { extractInvoiceMarkdown, callAzureOpenAIInvoiceFields, fileBufferToBase64, callAzureOpenAIInvoiceFieldsBase64 } = require('./dataExtract');
+const { extractInvoiceMarkdown, callAzureOpenAIInvoiceFields, fileBufferToBase64, callAzureOpenAIInvoiceFieldsBase64, translateJsonToEnglish } = require('./dataExtract');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -29,6 +29,7 @@ const corsOptions = {
         // In production, you can specify allowed origins
         const allowedOrigins = [
             'http://localhost:5173',
+            'http://localhost:5174',
             'http://localhost:3000',
             'http://localhost:6500',
             'http://10.200.7.77:6500',
@@ -78,6 +79,13 @@ app.post('/api/upload', upload.array('invoicePdfs'), async (req, res) => {
     console.log('POST /api/upload called');
     const uploadedFiles = req.files;
     const results = [];
+    // Accept IsEnableOCRForOtherRegion as a form field or query param (default true)
+    let isEnableOCRForOtherRegion = true;
+    if (typeof req.body.IsEnableOCRForOtherRegion !== 'undefined') {
+        isEnableOCRForOtherRegion = req.body.IsEnableOCRForOtherRegion === 'true' || req.body.IsEnableOCRForOtherRegion === true;
+    } else if (typeof req.query.IsEnableOCRForOtherRegion !== 'undefined') {
+        isEnableOCRForOtherRegion = req.query.IsEnableOCRForOtherRegion === 'true' || req.query.IsEnableOCRForOtherRegion === true;
+    }
 
     if (!uploadedFiles || uploadedFiles.length === 0) {
         console.log('No files uploaded');
@@ -117,6 +125,16 @@ app.post('/api/upload', upload.array('invoicePdfs'), async (req, res) => {
             } catch (jsonParseError) {
                 console.error(`Error parsing OpenAI result for ${fileName}:`, jsonParseError);
                 parsedJsonResult = { error: "Failed to parse OpenAI response as JSON", rawResponse: openaiResultString };
+            }
+            // If enabled, translate all string fields to English (if not already English)
+            if (isEnableOCRForOtherRegion && !parsedJsonResult.error) {
+                try {
+                    parsedJsonResult = await translateJsonToEnglish(parsedJsonResult);
+                } catch (translationError) {
+                    console.error(`Translation error for ${fileName}:`, translationError);
+                    // Optionally, add a flag or error message to the result
+                    parsedJsonResult.translationError = translationError.message;
+                }
             }
 
             // Save JSON to a file

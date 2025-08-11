@@ -1,7 +1,8 @@
 // frontend/src/components/api.ts
 
 // Get API base URL from environment variable or use default
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// If VITE_API_BASE_URL is not set, use relative URLs (proxy will handle it)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 export async function uploadInvoices(files: FileList): Promise<any[]> {
   const formData = new FormData();

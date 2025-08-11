@@ -9,7 +9,8 @@ import {
   DollarSign,
   ChevronDown,
   ChevronRight,
-  TrendingUp
+  TrendingUp,
+  Timer
 } from "lucide-react";
  
 interface ResultsProps {
@@ -42,11 +43,17 @@ const Results: React.FC<ResultsProps> = ({ results, onProcessMoreClick, processi
  
   // Calculate total value from successful results
   const totalValue = results
-    .filter(r => r.success && r.data?.header?.total_amount)
+    .filter(r => r.success && r.data?.header?.invoice_total)
     .reduce((sum, r) => {
-      const amount = parseFloat(r.data.header.total_amount.replace(/[$,]/g, ''));
+      const amount = parseFloat(String(r.data.header.invoice_total).replace(/[^\d.-]/g, ''));
       return sum + (isNaN(amount) ? 0 : amount);
     }, 0);
+
+  const totalDuration = results
+    .filter(r => r.success && r.extraction_duration)
+    .reduce((sum, r) => sum + (r.extraction_duration || 0), 0);
+  
+  const averageDuration = successCount > 0 ? totalDuration / successCount : 0;
  
   const toggleExpanded = (index: number) => {
     setExpandedResults(prev => ({
@@ -208,6 +215,21 @@ const Results: React.FC<ResultsProps> = ({ results, onProcessMoreClick, processi
               className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br from-purple-800 via-purple-900 to-purple-950 shadow-xl transition-transform duration-300"
             >
               <TrendingUp className="w-7 h-7 text-white animate-glow transition-transform duration-300 shadow-lg hover:rotate-12 hover:scale-110 cursor-pointer" />
+            </div>
+          </div>
+        </div>
+
+        {/* Average Duration */}
+        <div className="bg-purple-200 p-6 rounded-2xl border border-border shadow-2xl transition-all duration-300 animate-scale-in hover:scale-105" style={{ animationDelay: '400ms' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-2xl font-bold text-info">{averageDuration.toFixed(2)}s</p>
+              <p className="text-sm text-muted-foreground mt-1">Avg. Time</p>
+            </div>
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 shadow-xl transition-transform duration-300"
+            >
+              <Timer className="w-7 h-7 text-white animate-pulse-slow transition-transform duration-300 shadow-lg hover:rotate-12 hover:scale-110 cursor-pointer" />
             </div>
           </div>
         </div>
