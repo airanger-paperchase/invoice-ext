@@ -1,0 +1,288 @@
+{
+  "header": {
+    "VendorName": "Woods Foodservice Limited",
+    "VendorTaxId": "GB 228 6771 35",
+    "CustomerName": "AZUR LTD T/A LPM",
+    "InvoiceNumber": "25-576006",
+    "InvoiceDate": "2025-07-07",
+    "DueDate": null,
+    "SubTotal": 899.79,
+    "TotalTax": 0.8,
+    "InvoiceTotal": 900.59,
+    "PaymentTerm": "16th Next Month",
+    "PurchaseOrder": null
+  },
+  "invoicelines": [
+    {
+      "ProductCode": "DELC02",
+      "Description": "DELIVERY CHARGE COF:533d6686-eb85-4c20-8919- eacc13989d01 1 Ambient",
+      "Quantity": 1,
+      "UnitPrice": null,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 0,
+      "Tax": null
+    },
+    {
+      "ProductCode": "PEPB60",
+      "Description": "BLACK PEPPERCORNS GREENFIELDS",
+      "Quantity": 2,
+      "UnitPrice": 6.11,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 12.22,
+      "Tax": null
+    },
+    {
+      "ProductCode": "PEPB045",
+      "Description": "BLACK CRACKED PEPPER (1800 MSH) GREENFIELDS",
+      "Quantity": 2,
+      "UnitPrice": 6.52,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 13.04,
+      "Tax": null
+    },
+    {
+      "ProductCode": "OILG11",
+      "Description": "ABEL GRAPESEED OIL (GLASS)",
+      "Quantity": 2,
+      "UnitPrice": 5.24,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 10.48,
+      "Tax": null
+    },
+    {
+      "ProductCode": "SUGS43",
+      "Description": "MAPLE SYRUP AMBER GRADE A CENTAUR",
+      "Quantity": 6,
+      "UnitPrice": 17.57,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 105.42,
+      "Tax": null
+    },
+    {
+      "ProductCode": "BAKB25",
+      "Description": "BICARBONATE OF SODA NOELS",
+      "Quantity": 1,
+      "UnitPrice": 4.02,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 4.02,
+      "Tax": null
+    },
+    {
+      "ProductCode": "LEAD09",
+      "Description": "OLIVES BLACK PITTED GOMO",
+      "Quantity": 1,
+      "UnitPrice": 12.28,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 12.28,
+      "Tax": null
+    },
+    {
+      "ProductCode": "SUGC02",
+      "Description": "CASTER SUGAR SACK TATE & LYLE",
+      "Quantity": 1,
+      "UnitPrice": 30.74,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 30.74,
+      "Tax": null
+    },
+    {
+      "ProductCode": "SUGD01",
+      "Description": "DEMERARA SUGAR TATE & LYLE",
+      "Quantity": 2,
+      "UnitPrice": 5.23,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 10.46,
+      "Tax": null
+    },
+    {
+      "ProductCode": "NUTH23",
+      "Description": "HAZELNUTS GROUND AFROPOL",
+      "Quantity": 2,
+      "UnitPrice": 14.55,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 29.1,
+      "Tax": null
+    },
+    {
+      "ProductCode": "SLTS19",
+      "Description": "SEA SALT FLAKES TUB MALDON",
+      "Quantity": 6,
+      "UnitPrice": 13.33,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 79.98,
+      "Tax": null
+    },
+    {
+      "ProductCode": "SUGM10",
+      "Description": "MALT EXTRACT (SYRUP) RAYNERS",
+      "Quantity": 6,
+      "UnitPrice": 3.82,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 22.92,
+      "Tax": null
+    },
+    {
+      "ProductCode": "RICB07",
+      "Description": "PURE BASMATI RICE TILDA",
+      "Quantity": 2,
+      "UnitPrice": 16.67,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 33.34,
+      "Tax": null
+    },
+    {
+      "ProductCode": "BREB01",
+      "Description": "BREAD BROWN SLICED WARBURTONS",
+      "Quantity": 4,
+      "UnitPrice": 1.93,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 7.72,
+      "Tax": null
+    },
+    {
+      "ProductCode": "BREW02",
+      "Description": "BREAD WHITE SLICED WARBURTONS",
+      "Quantity": 4,
+      "UnitPrice": 1.88,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 7.52,
+      "Tax": null
+    },
+    {
+      "ProductCode": "CBNB04",
+      "Description": "BAKED BEANS CATERING HEINZ",
+      "Quantity": 2,
+      "UnitPrice": 6.06,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 12.12,
+      "Tax": null
+    },
+    {
+      "ProductCode": "MAYH03",
+      "Description": "HELLMANN'S MAYONNAISE",
+      "Quantity": 3,
+      "UnitPrice": 21.67,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 65.01,
+      "Tax": null
+    },
+    {
+      "ProductCode": "MUSTACHE02",
+      "Description": "OATS FLAKED PORRIDGE",
+      "Quantity": 1,
+      "UnitPrice": 5.87,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 5.87,
+      "Tax": null
+    },
+    {
+      "ProductCode": "SCET34",
+      "Description": "TOMATO KETCHUP HEINZ",
+      "Quantity": 2,
+      "UnitPrice": 13.05,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 26.1,
+      "Tax": null
+    },
+    {
+      "ProductCode": "CSFT28",
+      "Description": "TUNA CHUNKS IN BRINE CORE",
+      "Quantity": 2,
+      "UnitPrice": 10.17,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 20.34,
+      "Tax": null
+    },
+    {
+      "ProductCode": "MLKC18",
+      "Description": "CONDENSED MILK SWEETENED CARNATION",
+      "Quantity": 6,
+      "UnitPrice": 2.89,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 17.34,
+      "Tax": null
+    },
+    {
+      "ProductCode": "NOTE05",
+      "Description": "ALMONDS GROUND AFROPOL",
+      "Quantity": 2,
+      "UnitPrice": 9.99,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 19.98,
+      "Tax": null
+    },
+    {
+      "ProductCode": "LIST12",
+      "Description": "STEM GINGER IN SYRUP OPIES",
+      "Quantity": 1,
+      "UnitPrice": 9.75,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 9.75,
+      "Tax": null
+    },
+    {
+      "ProductCode": "SLTT07",
+      "Description": "TABLE SALT TUB CORE",
+      "Quantity": 15,
+      "UnitPrice": 8.22,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 123.3,
+      "Tax": null
+    },
+    {
+      "ProductCode": "SCET18",
+      "Description": "TABASCO RED PEPPER SAUCE SMALL 2 Frozen",
+      "Quantity": 6,
+      "UnitPrice": 2.58,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 15.48,
+      "Tax": null
+    },
+    {
+      "ProductCode": "CHIH03/S",
+      "Description": "HASH BROWN TRIANGLES LAMB WESTON 4 Chilled",
+      "Quantity": 2,
+      "UnitPrice": 8.22,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 16.44,
+      "Tax": null
+    },
+    {
+      "ProductCode": "BUT10",
+      "Description": "BUTTER UNSALTED ROLLS LESCURE (GOLD)",
+      "Quantity": 1,
+      "UnitPrice": 94.41,
+      "Unit": null,
+      "per_line_item_tax": null,
+      "Amount": 94.41,
+      "Tax": null
+    }
+  ],
+  "extraction_duration": 15.152
+}
