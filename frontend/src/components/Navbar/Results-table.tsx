@@ -41,17 +41,17 @@ const Results: React.FC<ResultsProps> = ({ results, onProcessMoreClick, processi
   const successCount = results.filter(r => r.success).length;
   const errorCount = results.length - successCount;
  
-  // Calculate total value from successful results
+  // Calculate total value from successful results (new schema uses Header.InvoiceTotal as number)
   const totalValue = results
-    .filter(r => r.success && r.data?.header?.invoice_total)
+    .filter(r => r.success && r.data?.header?.InvoiceTotal != null)
     .reduce((sum, r) => {
-      const amount = parseFloat(String(r.data.header.invoice_total).replace(/[^\d.-]/g, ''));
-      return sum + (isNaN(amount) ? 0 : amount);
+      const amount = Number(r.data.header.InvoiceTotal);
+      return sum + (Number.isFinite(amount) ? amount : 0);
     }, 0);
 
   const totalDuration = results
-    .filter(r => r.success && r.extraction_duration)
-    .reduce((sum, r) => sum + (r.extraction_duration || 0), 0);
+    .filter(r => r.success && r.data?.extraction_duration)
+    .reduce((sum, r) => sum + (r.data?.extraction_duration || 0), 0);
   
   const averageDuration = successCount > 0 ? totalDuration / successCount : 0;
  
@@ -63,7 +63,7 @@ const Results: React.FC<ResultsProps> = ({ results, onProcessMoreClick, processi
   };
  
   // Enhanced header info renderer with icons and better styling
-  const renderHeaderInfo = (header: Record<string, string>) => {
+  const renderHeaderInfo = (header: Record<string, any>) => {
     if (!header) return null;
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 ">
@@ -87,7 +87,7 @@ const Results: React.FC<ResultsProps> = ({ results, onProcessMoreClick, processi
   };
  
   // Enhanced line items table with better styling
-  const renderLineItemsTable = (lineItems: Record<string, string>[]) => {
+  const renderLineItemsTable = (lineItems: Record<string, any>[]) => {
     if (!lineItems.length) return null;
  
     const headers = Object.keys(lineItems[0]);
@@ -98,7 +98,9 @@ const Results: React.FC<ResultsProps> = ({ results, onProcessMoreClick, processi
           <table className="w-full bg-purple-100">
             <thead>
               <tr className="bg-purple-200 text-black">
-                {headers.map((header, index) => (
+                {headers.map((header, index) => {
+                  const headerLower = String(header).toLowerCase();
+                  return (
                   <th
                     key={header}
                     className={`px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider text-black ${
@@ -106,12 +108,13 @@ const Results: React.FC<ResultsProps> = ({ results, onProcessMoreClick, processi
                     }`}
                   >
                     <div className="flex items-center space-x-2 text-black">
-                      {header === 'description' && <FileText className="w-4 h-4 text-black" />}
-                      {(header.includes('price') || header.includes('total')) && <DollarSign className="w-4 h-4 text-black" />}
-                      <span>{header.replace(/_/g, " ")}</span>
+                      {headerLower === 'description' && <FileText className="w-4 h-4 text-black" />}
+                      {(headerLower.includes('price') || headerLower.includes('total')) && <DollarSign className="w-4 h-4 text-black" />}
+                      <span>{String(header).replace(/_/g, " ")}</span>
                     </div>
                   </th>
-                ))}
+                  );
+                })}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -123,21 +126,26 @@ const Results: React.FC<ResultsProps> = ({ results, onProcessMoreClick, processi
                   } hover:bg-primary/5 transition-all duration-300 group animate-fade-in`}
                   style={{ animationDelay: `${idx * 50}ms` }}
                 >
-                  {Object.values(item).map((value, i) => (
-                    <td key={i} className="px-6 py-4 text-sm text-black group-hover:text-primary transition-colors duration-300">
-                      {headers[i]?.includes('price') || headers[i]?.includes('total') ? (
-                        <span className="font-bold text-black bg-success/10 px-2 py-1 rounded-full">
-                          {value}
-                        </span>
-                      ) : headers[i] === 'quantity' ? (
-                        <span className="font-semibold text-black bg-purple-200 px-2 py-1 rounded-full">
-                          {value}
-                        </span>
-                      ) : (
-                        <span className="font-medium text-black">{value}</span>
-                      )}
-                    </td>
-                  ))}
+                  {Object.values(item).map((value, i) => {
+                    const keyLower = String(headers[i] || '').toLowerCase();
+                    const isMoney = keyLower.includes('price') || keyLower.includes('total');
+                    const isQuantity = keyLower === 'quantity';
+                    return (
+                      <td key={i} className="px-6 py-4 text-sm text-black group-hover:text-primary transition-colors duration-300">
+                        {isMoney ? (
+                          <span className="font-bold text-black bg-success/10 px-2 py-1 rounded-full">
+                            {String(value)}
+                          </span>
+                        ) : isQuantity ? (
+                          <span className="font-semibold text-black bg-purple-200 px-2 py-1 rounded-full">
+                            {String(value)}
+                          </span>
+                        ) : (
+                          <span className="font-medium text-black">{String(value)}</span>
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>
@@ -204,30 +212,17 @@ const Results: React.FC<ResultsProps> = ({ results, onProcessMoreClick, processi
             </div>
           </div>
         </div>
-        {/* Total Value */}
-        <div className="bg-purple-200 p-6 rounded-2xl border border-border shadow-2xl transition-all duration-300 animate-scale-in hover:scale-105" style={{ animationDelay: '300ms' }}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-2xl font-bold text-success">${totalValue.toFixed(2)}</p>
-              <p className="text-sm text-muted-foreground mt-1">Total Value</p>
-            </div>
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br from-purple-800 via-purple-900 to-purple-950 shadow-xl transition-transform duration-300"
-            >
-              <TrendingUp className="w-7 h-7 text-white animate-glow transition-transform duration-300 shadow-lg hover:rotate-12 hover:scale-110 cursor-pointer" />
-            </div>
-          </div>
-        </div>
+
 
         {/* Average Duration */}
-        <div className="bg-purple-200 p-6 rounded-2xl border border-border shadow-2xl transition-all duration-300 animate-scale-in hover:scale-105" style={{ animationDelay: '400ms' }}>
+        <div className="bg-purple-200 p-6 rounded-2xl border border-border shadow-2xl transition-all duration-300 animate-scale-in hover:scale-105" style={{ animationDelay: '300ms' }}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-2xl font-bold text-info">{averageDuration.toFixed(2)}s</p>
               <p className="text-sm text-muted-foreground mt-1">Avg. Time</p>
             </div>
             <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 shadow-xl transition-transform duration-300"
+              className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br from-purple-800 via-purple-900 to-purple-950 shadow-xl transition-transform duration-300"
             >
               <Timer className="w-7 h-7 text-white animate-pulse-slow transition-transform duration-300 shadow-lg hover:rotate-12 hover:scale-110 cursor-pointer" />
             </div>
@@ -351,13 +346,13 @@ const Results: React.FC<ResultsProps> = ({ results, onProcessMoreClick, processi
       </div>
 
                       {/* Line Items */}
-                      {result.data.line_items?.length > 0 && (
+                      {result.data.invoicelines?.length > 0 && (
                         <div>
                           <h4 className="text-lg font-semibold text-foreground mb-4 flex items-center space-x-2">
                             <FileText className="w-5 h-5 text-primary" />
-                            <span>Line Items ({result.data.line_items.length})</span>
+                            <span>Line Items ({result.data.invoicelines.length})</span>
                           </h4>
-                          {renderLineItemsTable(result.data.line_items)}
+                          {renderLineItemsTable(result.data.invoicelines)}
                         </div>
                       )}
                     </div>

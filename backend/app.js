@@ -310,19 +310,19 @@ const corsOptions = {
             return callback(null, true);
         }
         
-        // // In production, you can specify allowed origins
-        // const allowedOrigins = [
-        //     'http://localhost:5173',
-        //     'http://localhost:5174',
-        //     'http://localhost:3000',
-        //     'http://localhost:6500',
-        //     'http://10.200.7.77:6500',
-        //     'http://10.200.7.77:5173',
-        //     'http://10.200.7.77:3000',
-        //     'http://10.200.7.77:6511',
-        //     'http://10.200.7.77:3000'
+        // In production, you can specify allowed origins
+        const allowedOrigins = [
+            'http://localhost:5173',
+            'http://localhost:5174',
+            'http://localhost:3000',
+            'http://localhost:6500',
+            'http://10.200.7.77:6500',
+            'http://10.200.7.77:5173',
+            'http://10.200.7.77:3000',
+            'http://10.200.7.77:6511',
+            'http://10.200.7.77:3000'
 
-        // ];
+        ];
         
         if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
@@ -358,7 +358,6 @@ function extractJsonFromString(str) {
     return str;
 }
 
-// Route for file upload and processing
 // Route for file upload and processing
 app.post('/api/upload', upload.array('invoicePdfs'), async (req, res) => {
     console.log('POST /api/upload called');

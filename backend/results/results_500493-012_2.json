@@ -48,7 +48,7 @@
       "Description": "ABEL GRAPESEED OIL (GLASS)",
       "Quantity": 2,
       "UnitPrice": 5.24,
-      "Unit": null,
+      "Unit": "750ML",
       "per_line_item_tax": null,
       "Amount": 10.48,
       "Tax": null
@@ -58,7 +58,7 @@
       "Description": "MAPLE SYRUP AMBER GRADE A CENTAUR",
       "Quantity": 6,
       "UnitPrice": 17.57,
-      "Unit": null,
+      "Unit": "1.25KG",
       "per_line_item_tax": null,
       "Amount": 105.42,
       "Tax": null
@@ -68,7 +68,7 @@
       "Description": "BICARBONATE OF SODA NOELS",
       "Quantity": 1,
       "UnitPrice": 4.02,
-      "Unit": null,
+      "Unit": "900G",
       "per_line_item_tax": null,
       "Amount": 4.02,
       "Tax": null
@@ -78,7 +78,7 @@
       "Description": "OLIVES BLACK PITTED GOMO",
       "Quantity": 1,
       "UnitPrice": 12.28,
-      "Unit": null,
+      "Unit": "4.15KG",
       "per_line_item_tax": null,
       "Amount": 12.28,
       "Tax": null
@@ -88,7 +88,7 @@
       "Description": "CASTER SUGAR SACK TATE & LYLE",
       "Quantity": 1,
       "UnitPrice": 30.74,
-      "Unit": null,
+      "Unit": "25KG",
       "per_line_item_tax": null,
       "Amount": 30.74,
       "Tax": null
@@ -98,7 +98,7 @@
       "Description": "DEMERARA SUGAR TATE & LYLE",
       "Quantity": 2,
       "UnitPrice": 5.23,
-      "Unit": null,
+      "Unit": "3KG",
       "per_line_item_tax": null,
       "Amount": 10.46,
       "Tax": null
@@ -108,7 +108,7 @@
       "Description": "HAZELNUTS GROUND AFROPOL",
       "Quantity": 2,
       "UnitPrice": 14.55,
-      "Unit": null,
+      "Unit": "1KG",
       "per_line_item_tax": null,
       "Amount": 29.1,
       "Tax": null
@@ -118,7 +118,7 @@
       "Description": "SEA SALT FLAKES TUB MALDON",
       "Quantity": 6,
       "UnitPrice": 13.33,
-      "Unit": null,
+      "Unit": "1.4KG",
       "per_line_item_tax": null,
       "Amount": 79.98,
       "Tax": null
@@ -128,7 +128,7 @@
       "Description": "MALT EXTRACT (SYRUP) RAYNERS",
       "Quantity": 6,
       "UnitPrice": 3.82,
-      "Unit": null,
+      "Unit": "340G",
       "per_line_item_tax": null,
       "Amount": 22.92,
       "Tax": null
@@ -138,7 +138,7 @@
       "Description": "PURE BASMATI RICE TILDA",
       "Quantity": 2,
       "UnitPrice": 16.67,
-      "Unit": null,
+      "Unit": "5KG",
       "per_line_item_tax": null,
       "Amount": 33.34,
       "Tax": null
@@ -148,7 +148,7 @@
       "Description": "BREAD BROWN SLICED WARBURTONS",
       "Quantity": 4,
       "UnitPrice": 1.93,
-      "Unit": null,
+      "Unit": "800G",
       "per_line_item_tax": null,
       "Amount": 7.72,
       "Tax": null
@@ -158,7 +158,7 @@
       "Description": "BREAD WHITE SLICED WARBURTONS",
       "Quantity": 4,
       "UnitPrice": 1.88,
-      "Unit": null,
+      "Unit": "800G",
       "per_line_item_tax": null,
       "Amount": 7.52,
       "Tax": null
@@ -168,7 +168,7 @@
       "Description": "BAKED BEANS CATERING HEINZ",
       "Quantity": 2,
       "UnitPrice": 6.06,
-      "Unit": null,
+      "Unit": "2.62KG",
       "per_line_item_tax": null,
       "Amount": 12.12,
       "Tax": null
@@ -178,7 +178,7 @@
       "Description": "HELLMANN'S MAYONNAISE",
       "Quantity": 3,
       "UnitPrice": 21.67,
-      "Unit": null,
+      "Unit": "5LTR",
       "per_line_item_tax": null,
       "Amount": 65.01,
       "Tax": null
@@ -188,7 +188,7 @@
       "Description": "OATS FLAKED PORRIDGE",
       "Quantity": 1,
       "UnitPrice": 5.87,
-      "Unit": null,
+      "Unit": "3KG",
       "per_line_item_tax": null,
       "Amount": 5.87,
       "Tax": null
@@ -198,7 +198,7 @@
       "Description": "TOMATO KETCHUP HEINZ",
       "Quantity": 2,
       "UnitPrice": 13.05,
-      "Unit": null,
+      "Unit": "2.15LTR",
       "per_line_item_tax": null,
       "Amount": 26.1,
       "Tax": null
@@ -208,7 +208,7 @@
       "Description": "TUNA CHUNKS IN BRINE CORE",
       "Quantity": 2,
       "UnitPrice": 10.17,
-      "Unit": null,
+      "Unit": "1.705KG",
       "per_line_item_tax": null,
       "Amount": 20.34,
       "Tax": null
@@ -218,7 +218,7 @@
       "Description": "CONDENSED MILK SWEETENED CARNATION",
       "Quantity": 6,
       "UnitPrice": 2.89,
-      "Unit": null,
+      "Unit": "397G",
       "per_line_item_tax": null,
       "Amount": 17.34,
       "Tax": null
@@ -228,7 +228,7 @@
       "Description": "ALMONDS GROUND AFROPOL",
       "Quantity": 2,
       "UnitPrice": 9.99,
-      "Unit": null,
+      "Unit": "1KG",
       "per_line_item_tax": null,
       "Amount": 19.98,
       "Tax": null
@@ -238,7 +238,7 @@
       "Description": "STEM GINGER IN SYRUP OPIES",
       "Quantity": 1,
       "UnitPrice": 9.75,
-      "Unit": null,
+      "Unit": "1.3KG",
       "per_line_item_tax": null,
       "Amount": 9.75,
       "Tax": null
@@ -248,7 +248,7 @@
       "Description": "TABLE SALT TUB CORE",
       "Quantity": 15,
       "UnitPrice": 8.22,
-      "Unit": null,
+      "Unit": "6KG",
       "per_line_item_tax": null,
       "Amount": 123.3,
       "Tax": null
@@ -258,7 +258,7 @@
       "Description": "TABASCO RED PEPPER SAUCE SMALL 2 Frozen",
       "Quantity": 6,
       "UnitPrice": 2.58,
-      "Unit": null,
+      "Unit": "57ML",
       "per_line_item_tax": null,
       "Amount": 15.48,
       "Tax": null
@@ -268,7 +268,7 @@
       "Description": "HASH BROWN TRIANGLES LAMB WESTON 4 Chilled",
       "Quantity": 2,
       "UnitPrice": 8.22,
-      "Unit": null,
+      "Unit": "2.5KG",
       "per_line_item_tax": null,
       "Amount": 16.44,
       "Tax": null
@@ -278,11 +278,11 @@
       "Description": "BUTTER UNSALTED ROLLS LESCURE (GOLD)",
       "Quantity": 1,
       "UnitPrice": 94.41,
-      "Unit": null,
+      "Unit": "250G",
       "per_line_item_tax": null,
       "Amount": 94.41,
       "Tax": null
     }
   ],
-  "extraction_duration": 15.152
+  "extraction_duration": 13.552
 }

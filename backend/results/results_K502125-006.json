@@ -1,0 +1,28 @@
+{
+  "header": {
+    "VendorName": "ALBION FINE FOODS",
+    "VendorTaxId": "GB252036928",
+    "CustomerName": "Albion Fine Foods Ltd",
+    "InvoiceNumber": "5037533",
+    "InvoiceDate": "2025-08-15",
+    "DueDate": null,
+    "SubTotal": 11.97,
+    "TotalTax": 0,
+    "InvoiceTotal": 11.97,
+    "PaymentTerm": null,
+    "PurchaseOrder": null
+  },
+  "invoicelines": [
+    {
+      "ProductCode": null,
+      "Description": "Cream UHT Aerosol Spray 500ml",
+      "Quantity": 3,
+      "UnitPrice": 3.99,
+      "Unit": "500ml",
+      "per_line_item_tax": 0,
+      "Amount": 11.97,
+      "Tax": 0
+    }
+  ],
+  "extraction_duration": 2.938
+}
